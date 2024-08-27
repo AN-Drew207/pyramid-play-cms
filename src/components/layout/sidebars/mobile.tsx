@@ -74,7 +74,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                 }}
               ></XIcon>
               <div className="flex items-center justify-center gap-2 px-3 py-16 w-full">
-                <img src={"/logos/logo.png"} className="w-[90%]" alt="" />
+                <img src={"/logos/logo.svg"} className="w-[90%]" alt="" />
               </div>
               {profileItems.map(
                 ({ name, link, subItems, role, icon, onlyUser }) => {

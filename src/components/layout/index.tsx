@@ -50,7 +50,7 @@ export default function Layout({ children }: any) {
           <div className="w-[285px] lg:flex hidden pb-8 flex-col gap-8 justify-start shrink-0 min-h-[calc(100vh-48px)] top-0 left-0 !sticky z-[10] border-secondary">
             <div className="flex flex-col gap-2 w-full">
               <div className="flex items-center justify-center gap-2 px-3 py-16 w-full">
-                <img src={"/logos/logo.png"} className="w-[90%]" alt="" />
+                <img src={"/logos/logo.svg"} className="w-[90%]" alt="" />
               </div>
               {profileItems.map(
                 ({ name, link, subItems, role, icon, onlyUser }) => {
