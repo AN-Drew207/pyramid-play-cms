@@ -1,0 +1,98 @@
+:root {
+  --color-primary: #efb626;
+  --color-primary-disabled: #8a2912;
+  --color-primary-opacity: #8a2912;
+  --color-red-primary: #ea1701;
+  --color-secondary: #741415;
+  --color-overlay: #fff;
+  --color-overlay-2: #fff;
+  --color-overlay-3: #010d2a;
+  --color-overlay-border: #b3b3b3;
+  --color-overlay-opacity: rgb(0, 0, 0, 0.3);
+  --color-white: white;
+  --color-green-button: #47e439;
+  --color-alert-success: #37a211;
+  --color-alert-error: #b52423;
+  --color-gray-0: #ffffff;
+  --color-gray-200: #dddddd;
+  --color-gray-500: #707070;
+  --color-gray-500-opacity-10: #f7f8f7;
+  --color-gray-800: #444444;
+  --color-gray-900: #000000;
+  --color-dark: #171c1b;
+  --color-facebook: #4267b2;
+  --transparent-gray-200: rgb(221, 221, 221, 0.5);
+  --transparent-gray-800: rgb(68, 68, 68, 0.5);
+  --transparent-dark-100: rgb(0, 0, 0, 0.1);
+}
+
+.light {
+  --color-primary: #fff;
+  --color-primary-disabled: #b8b8b8;
+  --color-primary-opacity: #174d97;
+  --color-red-primary: #ea1701;
+  --color-secondary: #0b0b0b;
+  --color-overlay: #000000;
+  --color-overlay-2: #18191b;
+  --color-overlay-3: #030406;
+  --color-overlay-border: #626262;
+  --color-bg-shop: #059ffa;
+  --color-white: white;
+  --color-green-button: #47e439;
+  --color-alert-success: #37a211;
+  --color-alert-error: #b52423;
+  --color-gray-0: #ffffff;
+  --color-gray-200: #dddddd;
+  --color-gray-500: #707070;
+  --color-gray-500-opacity-10: #f7f8f7;
+  --color-gray-800: #444444;
+  --color-gray-900: #000000;
+  --color-dark: #171c1b;
+  --color-facebook: #4267b2;
+  --transparent-gray-200: rgb(221, 221, 221, 0.5);
+  --transparent-gray-800: rgb(68, 68, 68, 0.5);
+  --transparent-dark-100: rgb(0, 0, 0, 0.1);
+}
+
+.dark {
+  --color-primary: #fff;
+  --color-primary-disabled: #b8b8b8;
+  --color-primary-opacity: #174d97;
+  --color-red-primary: #ea1701;
+  --color-secondary: #0b0b0b;
+  --color-overlay: #000000;
+  --color-overlay-2: #18191b;
+  --color-overlay-3: #030406;
+  --color-overlay-border: #626262;
+  --color-white: white;
+  --color-green-button: #47e439;
+  --color-alert-success: #37a211;
+  --color-alert-error: #b52423;
+  --color-gray-0: #ffffff;
+  --color-gray-200: #dddddd;
+  --color-gray-500: #707070;
+  --color-gray-500-opacity-10: #f7f8f7;
+  --color-gray-800: #444444;
+  --color-gray-900: #000000;
+  --color-dark: #171c1b;
+  --color-facebook: #4267b2;
+  --transparent-gray-200: rgb(221, 221, 221, 0.5);
+  --transparent-gray-800: rgb(68, 68, 68, 0.5);
+  --transparent-dark-100: rgb(0, 0, 0, 0.1);
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .hide-scroll-bar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .hide-scroll-bar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
