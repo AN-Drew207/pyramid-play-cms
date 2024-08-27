@@ -16,13 +16,19 @@ import { es } from "date-fns/locale/es";
 import { AuthContext } from "@/context/useUser";
 import { configureHOST } from "@/api/config";
 import { RoleEnum } from "../utils/roles";
+import { MenuIcon, XIcon } from "@heroicons/react/solid";
+import { SidebarMobile } from "./sidebars/mobile";
 
 export default function Layout({ children }: any) {
   const path = usePathname();
   const router = useRouter();
   registerLocale("es", es);
   setDefaultLocale("es");
-  const { auth } = useContext(AuthContext);
+  const { auth, setAuth } = useContext(AuthContext);
+
+  const [sidebarOpen, setSidebarOpen] = React.useState(false);
+
+  const refSidebarMobile = React.useRef(null);
 
   React.useEffect(() => {
     //Initializing axios
@@ -30,10 +36,10 @@ export default function Layout({ children }: any) {
   }, []);
 
   React.useEffect(() => {
-    if (path && !path.includes("/auth") && !auth?.token) {
+    if (path && !path.includes("/auth") && auth === undefined) {
       router.push("/auth/login");
     }
-  }, [path]);
+  }, [auth]);
 
   return (
     <>
@@ -72,12 +78,14 @@ export default function Layout({ children }: any) {
                         </Link>
                       </React.Fragment>
                     ) : (
-                      <NavbarSubMenu
-                        name={name}
-                        icon={icon}
-                        items={subItems}
-                        userRole={RoleEnum(auth?.user.role)}
-                      />
+                      <React.Fragment key={name}>
+                        <NavbarSubMenu
+                          name={name}
+                          icon={icon}
+                          items={subItems}
+                          userRole={RoleEnum(auth?.user.role)}
+                        />
+                      </React.Fragment>
                     )
                   ) : (
                     ""
@@ -88,6 +96,7 @@ export default function Layout({ children }: any) {
               <React.Fragment>
                 <div
                   onClick={() => {
+                    setAuth(null);
                     router.push("/auth/login");
                   }}
                   className={clsx(
@@ -106,42 +115,72 @@ export default function Layout({ children }: any) {
           </div>
           <aside
             className={clsx(
-              "flex flex-col items-center justify-start lg:w-[calc(100vw-285px)] bg-white w-full gap-x-4 pb-8 relative",
+              "flex flex-col  items-center justify-start lg:w-[calc(100vw-285px)] bg-white w-full gap-x-4 pb-8 relative",
             )}
           >
-            <div className="flex items-center justify-end w-full h-20 bg-[#f4f4f4] shadow-box text-white py-6 px-8">
-              <div className="flex gap-2 justify-center items-center px-8 border-r-[2px] border-[#B3B3B3]">
-                <img src="/icons/modals/coins.svg" className="w-6 h-6" alt="" />
-                <p className="text-md text-[#B3B3B3] font-[550]">
-                  {auth?.user?.balance}
-                </p>
+            <div className="flex items-center lg:justify-end justify-between w-full h-20 bg-[#f4f4f4] shadow-box text-white py-6 px-8">
+              <div className="flex gap-2 lg:flex-row flex-row-reverse">
+                <div className="flex gap-2 justify-center items-center lg:px-8 lg:border-r-[2px] border-[#B3B3B3]">
+                  <img
+                    src="/icons/modals/coins.svg"
+                    className="w-6 h-6"
+                    alt=""
+                  />
+                  <p className="lg:text-lg text-sm text-[#B3B3B3] font-[550]">
+                    {auth?.user?.balance}
+                  </p>
+                </div>
+                <a
+                  href="mailto:support@pyramidplay.com"
+                  className="lg:flex hidden gap-2 items-center px-8 border-r-[2px] border-[#B3B3B3]"
+                >
+                  <img
+                    src="/icons/layout/support.svg"
+                    className="w-6 h-6"
+                    alt=""
+                  />
+                </a>{" "}
+                <Link
+                  href={"/perfil"}
+                  className="flex gap-2 lg:border-none border-r-2 border-[#B3B3B3] items-center lg:pl-8 lg:pr-0 pr-2"
+                >
+                  <img
+                    src="/icons/layout/user.svg"
+                    className="w-5 h-5"
+                    alt=""
+                  />
+                  <p className="lg:text-lg text-sm text-[#B3B3B3] font-[550]">
+                    {auth?.user?.firstName}
+                  </p>
+                </Link>
               </div>
-              {/* <div className="flex gap-2 items-center px-8 border-r-[2px] border-[#B3B3B3]">
-                <img
-                  src="/icons/layout/notify.svg"
-                  className="w-6 h-6"
-                  alt=""
+              {!sidebarOpen ? (
+                <MenuIcon
+                  className="h-6 w-6 shrink-0 text-primary cursor-pointer lg:hidden flex"
+                  aria-hidden="true"
+                  onClick={() => {
+                    setSidebarOpen((prev) => !prev);
+                  }}
                 />
-              </div> */}
-              <a
-                href="mailto:support@pyramidplay.com"
-                className="flex gap-2 items-center px-8 border-r-[2px] border-[#B3B3B3]"
-              >
-                <img
-                  src="/icons/layout/support.svg"
-                  className="w-6 h-6"
-                  alt=""
+              ) : (
+                <XIcon
+                  className="h-6 w-6 shrink-0 text-primary cursor-pointer lg:hidden flex"
+                  aria-hidden="true"
+                  onClick={() => {
+                    setSidebarOpen((prev) => !prev);
+                  }}
                 />
-              </a>{" "}
-              <Link href={"/perfil"} className="flex gap-2 items-center pl-8">
-                <img src="/icons/layout/user.svg" className="w-5 h-5" alt="" />
-                <p className="text-md text-[#B3B3B3] font-[550]">
-                  {auth?.user?.firstName}
-                </p>
-              </Link>
+              )}
             </div>
             <div className="h-full p-4 w-full">{children}</div>
           </aside>
+          <SidebarMobile
+            initialFocus={refSidebarMobile}
+            setSidebarOpen={setSidebarOpen}
+            sidebarOpen={sidebarOpen}
+            auth={auth}
+            setAuth={setAuth}
+          />
         </div>
       )}
     </>

@@ -15,6 +15,7 @@ import { faker } from "@faker-js/faker";
 import { AuthContext } from "@/context/useUser";
 import axios from "axios";
 import { obtenerPrimeraFechaDelMes, obtenerUltimaFechaDelMes } from "@/utils";
+import { useRouter } from "next/navigation";
 
 ChartJS.register(
   CategoryScale,
@@ -53,6 +54,7 @@ const labels = [
 
 export function NetwinMonthlyGraph() {
   const { auth } = useContext(AuthContext);
+  const router = useRouter();
   const [data, setData] = React.useState({
     labels,
     datasets: [
@@ -69,10 +71,6 @@ export function NetwinMonthlyGraph() {
       if (auth?.user.role !== "admin") {
         const arrayData = await Promise.all(
           labels.map((a, i) => {
-            console.log(
-              obtenerPrimeraFechaDelMes(i + 1),
-              obtenerUltimaFechaDelMes(i + 1),
-            );
             return axios.get(
               `/netwin/${auth?.user.id}?from=${obtenerPrimeraFechaDelMes(
                 i + 1,
@@ -85,7 +83,7 @@ export function NetwinMonthlyGraph() {
           datasets: [
             {
               data: arrayData.map(({ data }) => {
-                return data.data.items[0].netwin;
+                return data?.data?.items[0]?.netwin || 0;
               }),
               borderColor: "rgb(53, 162, 235)",
               backgroundColor: "rgba(53, 162, 235, 0.5)",
@@ -93,8 +91,11 @@ export function NetwinMonthlyGraph() {
           ],
         });
       }
-    } catch (e) {
-      console.log(e);
+    } catch (err: any) {
+      if (err?.response?.status == 401) {
+        router.push("/auth/login");
+      }
+      console.log(err);
     }
   };
 

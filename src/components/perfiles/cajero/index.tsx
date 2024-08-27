@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Input } from "@/components/common/form/input";
 import clsx from "clsx";
 import { useForm } from "react-hook-form";
 import ReporteFichasTabla from "../../reporte_fichas/tablaReporteFichas";
 import axios from "axios";
 import ReporteFichasPerfilTabla from "../pyramid/tablas/tablaReporteFichasPerfil";
+import { useRouter } from "next/navigation";
+import { AuthContext } from "@/context/useUser";
 
 export default function PerfilCajero() {
   const [page, setPage] = React.useState(0);
@@ -14,7 +16,9 @@ export default function PerfilCajero() {
     new Date(new Date().setHours(0, 0, 0, 0)).toISOString(),
     new Date(new Date().setHours(23, 59, 59, 59)).toISOString(),
   ]);
+  const router = useRouter();
   const { register } = useForm();
+  const { setAuth } = useContext(AuthContext);
 
   React.useEffect(() => {
     axios
@@ -30,6 +34,10 @@ export default function PerfilCajero() {
       })
       .catch((error) => {
         console.error(error);
+        if (error?.response?.status == 401) {
+          setAuth(null);
+          router.push("/auth/login");
+        }
       });
   }, [dates, page]);
 

@@ -26,7 +26,7 @@ export const Select: React.FC<
   primary,
   reset,
   options,
-  withoutX = false,
+  withoutx = false,
   value,
   ...props
 }) => {

@@ -1,10 +1,12 @@
-import React from "react";
+"use client";
+import React, { useContext } from "react";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/layout";
 import ReporteFichasTabla from "@/components/reporte_fichas/tablaReporteFichas";
 import axios from "axios";
+import { AuthContext } from "@/context/useUser";
 
-export default function Home() {
+export default function Agente() {
   const router = useRouter();
   const [page, setPage] = React.useState(0);
   const [txs, setTxs] = React.useState(0);
@@ -13,6 +15,7 @@ export default function Home() {
     new Date(new Date().setHours(0, 0, 0, 0)).toISOString(),
     new Date(new Date().setHours(23, 59, 59, 59)).toISOString(),
   ]);
+  const { auth } = useContext(AuthContext);
 
   React.useEffect(() => {
     axios
@@ -29,7 +32,7 @@ export default function Home() {
       .catch((error) => {
         console.error(error);
       });
-  }, [dates, page]);
+  }, [dates, page, auth]);
 
   return (
     <>

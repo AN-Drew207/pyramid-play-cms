@@ -1,20 +1,24 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Input } from "@/components/common/form/input";
 import clsx from "clsx";
 import { useForm } from "react-hook-form";
 import ReporteFichasTabla from "../../reporte_fichas/tablaReporteFichas";
 import axios from "axios";
 import ReporteFichasPerfilTabla from "../pyramid/tablas/tablaReporteFichasPerfil";
+import { useRouter } from "next/navigation";
+import { AuthContext } from "@/context/useUser";
 
 export default function PerfilAgente() {
   const [page, setPage] = React.useState(0);
   const [txs, setTxs] = React.useState(0);
   const [length, setLength] = React.useState(0);
+  const router = useRouter();
   const [dates, setDates] = React.useState([
     new Date(new Date().setHours(0, 0, 0, 0)).toISOString(),
     new Date(new Date().setHours(23, 59, 59, 59)).toISOString(),
   ]);
   const { register } = useForm();
+  const { setAuth } = useContext(AuthContext);
 
   React.useEffect(() => {
     axios
@@ -30,6 +34,10 @@ export default function PerfilAgente() {
       })
       .catch((error) => {
         console.error(error);
+        if (error?.response?.status == 401) {
+          setAuth(null);
+          router.push("/auth/login");
+        }
       });
   }, [dates, page]);
 

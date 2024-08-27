@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import { Button } from "@/components/common/button";
 import { Input } from "@/components/common/form/input";
@@ -5,7 +6,7 @@ import { useForm } from "react-hook-form";
 import React from "react";
 import { useRouter } from "next/navigation";
 
-export default function Home() {
+export default function Recover() {
   const { register, reset } = useForm();
   const router = useRouter();
 
@@ -29,7 +30,7 @@ export default function Home() {
             title="Correo"
             name="email"
             register={register}
-            withoutX
+            withoutx
           />
         </div>
 

@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import { Button } from "@/components/common/button";
 import { Input } from "@/components/common/form/input";
@@ -9,7 +10,7 @@ import { toast } from "react-hot-toast";
 import axios from "axios";
 import { AuthContext } from "@/context/useUser";
 
-export default function Home() {
+export default function Login() {
   const [loading, setLoading] = React.useState(false);
   const { auth, setAuth } = useContext(AuthContext);
 
@@ -35,10 +36,13 @@ export default function Home() {
           router.replace("/dashboard");
         })
         .catch((error) => {
-          console.log(error);
+          console.log(error, "LOGIN");
           if (
             error?.response?.data?.message?.includes(
-              "Wrong credentials provided",
+              "password must be longer than or equal to 6 characters",
+            ) ||
+            error?.response?.data?.message?.includes(
+              "Wrong credentials, email or password invalid.",
             )
           ) {
             toast.error("Credenciales inválidas, revise e intente nuevamente.");
@@ -53,6 +57,20 @@ export default function Home() {
       console.log(error);
     }
   };
+
+  React.useEffect(() => {
+    if (auth?.token) {
+      axios
+        .get(`/users/me/hierarchy`)
+        .then((response) => {
+          router.replace("/dashboard");
+        })
+        .catch((error) => {
+          setAuth(null);
+          console.error(error);
+        });
+    }
+  }, [auth]);
 
   return (
     <>
@@ -74,7 +92,7 @@ export default function Home() {
             title="Correo Electrónico"
             name="email"
             register={register}
-            withoutX
+            withoutx
           />
           <InputPassword
             className="w-full"
@@ -84,7 +102,7 @@ export default function Home() {
             title="Contraseña"
             name="password"
             register={register}
-            withoutX
+            withoutx
           />
         </div>
         <div className="flex justify-end pt-2">

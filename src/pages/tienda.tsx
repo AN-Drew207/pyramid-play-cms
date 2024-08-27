@@ -1,3 +1,4 @@
+"use client";
 import React, { useContext } from "react";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
@@ -11,7 +12,7 @@ import { LoaderIcon, toast } from "react-hot-toast";
 import axios from "axios";
 import { AuthContext } from "@/context/useUser";
 
-export default function Home() {
+export default function Tienda() {
   const router = useRouter();
   const [section, setSection] = React.useState("membresia");
 
@@ -166,7 +167,7 @@ const Membresia = () => {
                 name="name"
                 register={register}
                 required
-                withoutX
+                withoutx
               />
             </div>
             <div className="flex flex-col gap-1">
@@ -182,7 +183,7 @@ const Membresia = () => {
                 name="card"
                 register={register}
                 required
-                withoutX
+                withoutx
               />
             </div>
             <div className="flex w-full gap-2">
@@ -199,7 +200,7 @@ const Membresia = () => {
                   name="expiry_month"
                   register={register}
                   required
-                  withoutX
+                  withoutx
                 />
               </div>
               <div className="flex flex-col gap-1 w-1/3">
@@ -216,7 +217,7 @@ const Membresia = () => {
                   type="number"
                   register={register}
                   required
-                  withoutX
+                  withoutx
                 />
               </div>
               <div className="flex flex-col gap-1 w-1/3">
@@ -232,7 +233,7 @@ const Membresia = () => {
                   name="cvv"
                   register={register}
                   required
-                  withoutX
+                  withoutx
                 />
               </div>
             </div>
@@ -494,7 +495,7 @@ const Fichas = () => {
                   name="name"
                   register={register}
                   required
-                  withoutX
+                  withoutx
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -514,7 +515,7 @@ const Fichas = () => {
                   maxlength="19"
                   placeholder="xxxx xxxx xxxx xxxx"
                   required
-                  withoutX
+                  withoutx
                 />
               </div>
               <div className="flex w-full gap-2">
@@ -530,7 +531,7 @@ const Fichas = () => {
                     name="expiry_month"
                     register={register}
                     required
-                    withoutX
+                    withoutx
                   />
                 </div>
                 <div className="flex flex-col gap-1 w-1/3">
@@ -546,7 +547,7 @@ const Fichas = () => {
                     type="number"
                     register={register}
                     required
-                    withoutX
+                    withoutx
                   />
                 </div>
                 <div className="flex flex-col gap-1 w-1/3">
@@ -561,7 +562,7 @@ const Fichas = () => {
                     name="cvv"
                     register={register}
                     required
-                    withoutX
+                    withoutx
                   />
                 </div>
               </div>

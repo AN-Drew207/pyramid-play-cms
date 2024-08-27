@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Input } from "@/components/common/form/input";
 import clsx from "clsx";
 import { useForm } from "react-hook-form";
 import ReporteFichasTabla from "../../reporte_fichas/tablaReporteFichas";
 import axios from "axios";
 import ReporteFichasPerfilTabla from "../pyramid/tablas/tablaReporteFichasPerfil";
+import { useRouter } from "next/navigation";
+import { AuthContext } from "@/context/useUser";
 
 export default function PerfilDistribuidor() {
   const [page, setPage] = React.useState(0);
@@ -15,6 +17,8 @@ export default function PerfilDistribuidor() {
     new Date(new Date().setHours(23, 59, 59, 59)).toISOString(),
   ]);
   const { register } = useForm();
+  const router = useRouter();
+  const { setAuth } = useContext(AuthContext);
 
   React.useEffect(() => {
     axios
@@ -30,6 +34,10 @@ export default function PerfilDistribuidor() {
       })
       .catch((error) => {
         console.error(error);
+        if (error?.response?.status == 401) {
+          setAuth(null);
+          router.push("/auth/login");
+        }
       });
   }, [dates, page]);
 

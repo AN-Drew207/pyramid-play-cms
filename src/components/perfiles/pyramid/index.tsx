@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Input } from "@/components/common/form/input";
 import clsx from "clsx";
 import { useForm } from "react-hook-form";
@@ -9,6 +9,8 @@ import { PencilIcon } from "@heroicons/react/solid";
 import EditarUsuarioMe from "@/components/usuarios/modales/editarUsuarioMe";
 import { useModal } from "@/hooks/modal";
 import ReporteCompraDeFichasTabla from "@/components/reporte_fichas/tablaReporteCompraFichas";
+import { useRouter } from "next/navigation";
+import { AuthContext } from "@/context/useUser";
 
 export default function PerfilPyramid() {
   const [page, setPage] = React.useState(0);
@@ -34,6 +36,8 @@ export default function PerfilPyramid() {
   const [user, serUser] = React.useState<any>({});
   const [memberships, setMembership] = React.useState<any>([]);
   const [chips, setChips] = React.useState<any>([]);
+  const router = useRouter();
+  const { setAuth } = useContext(AuthContext);
 
   const {
     Modal: ModalEdit,
@@ -51,6 +55,10 @@ export default function PerfilPyramid() {
       })
       .catch((error) => {
         console.error(error);
+        if (error?.response?.status == 401) {
+          setAuth(null);
+          router.push("/auth/login");
+        }
       });
   };
 
@@ -71,6 +79,10 @@ export default function PerfilPyramid() {
       })
       .catch((error) => {
         console.error(error);
+        if (error?.response?.status == 401) {
+          setAuth(null);
+          router.push("/auth/login");
+        }
       });
   }, [user, dates, page]);
 

@@ -4,7 +4,7 @@
 import { Button } from "@/components/common/button";
 import { Input } from "@/components/common/form/input";
 import { XIcon } from "@heroicons/react/outline";
-import React from "react";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import clsx from "clsx";
 import { Select } from "@/components/common/form/inputs/select";
@@ -13,9 +13,12 @@ import { toast } from "react-hot-toast";
 import { Roles } from "@/components/utils/roles";
 import { InputPassword } from "@/components/common/form/input/inputPassword";
 import { Comisiones, Datos, Ingreso, Permisos } from "./crear-editar";
+import { useRouter } from "next/navigation";
+import { AuthContext } from "@/context/useUser";
 
 export default function CrearUsuario({ hide, onUpdate }: any) {
   const { register, handleSubmit, setValue } = useForm();
+  const { setAuth } = useContext(AuthContext);
   const [section, setSection] = React.useState("ingreso");
   const [loading, setLoading] = React.useState(false);
   const [categories, setCategories] = React.useState([]);
@@ -25,36 +28,62 @@ export default function CrearUsuario({ hide, onUpdate }: any) {
     // { text: "Permisos", value: "permisos" },
     { text: "Comisiones", value: "comisiones" },
   ];
+  const router = useRouter();
 
-  const registro = (dataPrev: any) => {
+  const crearUsuario = (dataPrev: any) => {
     setLoading(true);
     const { commission_general, ...data } = dataPrev;
     const dataToSend = {
-      status: "active",
-      commissions: data.commissions.map((commission: any) => {
-        return {
-          ...commission,
-          commissionAmount: parseFloat(commission.commissionAmount),
-        };
-      }),
       ...data,
+      status: "active",
+      commissions: data?.commissions
+        ? data?.commissions?.map((commission: any) => {
+            return {
+              ...commission,
+              commissionAmount: Number(commission.commissionAmount),
+            };
+          })
+        : [],
     };
-    console.log(dataToSend);
+
+    console.log(dataToSend, "data");
+
+    const newObj = Object.fromEntries(
+      Object.entries(dataToSend).filter(
+        ([key, value]) => value !== "" && value !== undefined,
+      ),
+    );
+
+    console.log(newObj, "NEW OBJ");
+
     try {
       axios
-        .post("/auth/register/user", dataToSend)
+        .post("/auth/register/user", newObj)
         .then((response: any) => {
           toast.success("Usuario creado exitosamente!");
           hide();
         })
         .catch((error) => {
-          console.log(error);
-          if (
-            error.response.data.message.includes("Wrong credentials provided")
-          ) {
-            toast.error("Credenciales inválidas, revise e intente nuevamente.");
-          } else {
-            toast.error("Hubo un error, intente nuevamente.");
+          try {
+            const message = error?.response?.data?.message || [];
+            console.log(error);
+            if (message?.includes("Wrong credentials provided")) {
+              toast.error(
+                "Credenciales inválidas, revise e intente nuevamente.",
+              );
+            } else {
+              if (message[0]?.length) {
+                message?.forEach((message: any) => {
+                  if (message.includes("should not be empty")) {
+                    toast.error(message);
+                  }
+                });
+              } else {
+                toast.error("Hubo un error, intente nuevamente.");
+              }
+            }
+          } catch (error) {
+            console.log(error);
           }
         })
         .finally(() => {
@@ -85,6 +114,10 @@ export default function CrearUsuario({ hide, onUpdate }: any) {
       })
       .catch((error) => {
         console.error(error);
+        if (error?.response?.status == 401) {
+          setAuth(null);
+          router.push("/auth/login");
+        }
       });
   }, []);
 
@@ -103,7 +136,7 @@ export default function CrearUsuario({ hide, onUpdate }: any) {
           ? () => {
               setSection("comisiones");
             }
-          : registro,
+          : crearUsuario,
       )}
       className="flex flex-col w-full py-3 gap-6 overflow-auto pb-4 min-h-[400px] lg:w-[700px]"
     >
@@ -143,6 +176,7 @@ export default function CrearUsuario({ hide, onUpdate }: any) {
             register={register}
             categories={categories}
             setValue={setValue}
+            loading={loading}
           />
         )}
       </div>

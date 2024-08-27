@@ -4,7 +4,7 @@
 import { Button } from "@/components/common/button";
 import { Input } from "@/components/common/form/input";
 import { XIcon } from "@heroicons/react/outline";
-import React from "react";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { TipoUsuario } from "../tipoUsuario";
 import { MinusIcon, PlusIcon } from "@heroicons/react/solid";
@@ -12,12 +12,16 @@ import clsx from "clsx";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { Comisiones, Datos, Ingreso, Permisos } from "./crear-editar";
+import { useRouter } from "next/navigation";
+import { AuthContext } from "@/context/useUser";
 
 export default function EditarUsuario({ id, hide, onUpdate }: any) {
   const { register, setValue, handleSubmit } = useForm();
   const [section, setSection] = React.useState("ingreso");
   const [loading, setLoading] = React.useState(false);
   const [categories, setCategories] = React.useState([]);
+  const router = useRouter();
+  const { setAuth } = useContext(AuthContext);
 
   const [user, setUser] = React.useState<any>(null);
   const secciones = [
@@ -44,7 +48,9 @@ export default function EditarUsuario({ id, hide, onUpdate }: any) {
         .catch((error) => {
           console.log(error);
           if (
-            error.response.data.message.includes("Wrong credentials provided")
+            error?.response?.data?.message?.includes(
+              "Wrong credentials provided",
+            )
           ) {
             toast.error("Credenciales inválidas, revise e intente nuevamente.");
           } else {
@@ -77,6 +83,10 @@ export default function EditarUsuario({ id, hide, onUpdate }: any) {
       })
       .catch((error) => {
         console.error(error);
+        if (error?.response?.status == 401) {
+          setAuth(null);
+          router.push("/auth/login");
+        }
       });
   }, []);
 
@@ -124,20 +134,34 @@ export default function EditarUsuario({ id, hide, onUpdate }: any) {
       Object.keys(dataPrev).map((key) => {
         if (dataPrev[key]) dataToSend[key] = dataPrev[key];
       });
+      const newObj = Object.entries(dataToSend).filter((value) => value[1]);
       axios
-        .put("/users", dataToSend)
+        .put("/users", newObj)
         .then((response: any) => {
           toast.success("Usuario editado exitosamente!");
           hide();
         })
         .catch((error) => {
-          console.log(error);
-          if (
-            error.response.data.message.includes("Wrong credentials provided")
-          ) {
-            toast.error("Credenciales inválidas, revise e intente nuevamente.");
-          } else {
-            toast.error("Hubo un error, intente nuevamente.");
+          try {
+            const message = error?.response?.data?.message || [];
+            console.log(error);
+            if (message?.includes("Wrong credentials provided")) {
+              toast.error(
+                "Credenciales inválidas, revise e intente nuevamente.",
+              );
+            } else {
+              if (message[0]?.length) {
+                message?.forEach((message: any) => {
+                  if (message.includes("should not be empty")) {
+                    toast.error(message);
+                  }
+                });
+              } else {
+                toast.error("Hubo un error, intente nuevamente.");
+              }
+            }
+          } catch (error) {
+            console.log(error);
           }
         })
         .finally(() => {

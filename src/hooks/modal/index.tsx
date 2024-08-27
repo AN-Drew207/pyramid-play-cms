@@ -31,7 +31,7 @@ export const useModal = () => {
   };
 
   const Modal = useCallback(
-    ({ children, isShow, withoutX, onClose, noClose }: any) => {
+    ({ children, isShow, withoutx, onClose, noClose }: any) => {
       return (
         <ModalReact
           isOpen={isShow}
@@ -42,7 +42,7 @@ export const useModal = () => {
           contentLabel="Example Modal"
           style={customStyles}
         >
-          <div className="w-full min-w-[500px] shrink-0">{children}</div>
+          <div className="w-full sm:min-w-[500px] shrink-0">{children}</div>
         </ModalReact>
       );
     },

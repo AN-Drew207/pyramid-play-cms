@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import { Button } from "@/components/common/button";
 import { Input } from "@/components/common/form/input";
@@ -9,7 +10,7 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 import { AuthContext } from "@/context/useUser";
 
-export default function Home() {
+export default function Registro() {
   const { register, reset, handleSubmit } = useForm();
   const { auth, setAuth } = useContext(AuthContext);
   const [loading, setLoading] = React.useState(false);
@@ -33,7 +34,9 @@ export default function Home() {
         .catch((error) => {
           console.log(error);
           if (
-            error.response.data.message.includes("Wrong credentials provided")
+            error?.response?.data?.message?.includes(
+              "Wrong credentials provided",
+            )
           ) {
             toast.error("Credenciales inválidas, revise e intente nuevamente.");
           } else {
@@ -71,7 +74,7 @@ export default function Home() {
               title="Nombre"
               name="firstName"
               register={register}
-              withoutX
+              withoutx
             />
             <Input
               className="w-full"
@@ -81,7 +84,7 @@ export default function Home() {
               title="Apellido"
               name="lastName"
               register={register}
-              withoutX
+              withoutx
             />
           </div>
 
@@ -93,7 +96,7 @@ export default function Home() {
             title="Correo Electrónico"
             name="email"
             register={register}
-            withoutX
+            withoutx
           />
           <InputPassword
             className="w-full"
@@ -103,7 +106,7 @@ export default function Home() {
             title="Min. 8 caracteres"
             name="password"
             register={register}
-            withoutX
+            withoutx
           />
           <InputPassword
             className="w-full"
@@ -113,7 +116,7 @@ export default function Home() {
             title="Contraseña"
             name="rep_password"
             register={register}
-            withoutX
+            withoutx
           />
         </div>
         <div className="pt-8 w-full">

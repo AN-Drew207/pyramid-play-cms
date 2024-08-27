@@ -102,9 +102,7 @@ const UsuariosDropdown = ({ user, userSelected, setUserId }: any) => {
               : undefined
           }
         >
-          <h2 className="text-md text-[#989898]">
-            {user.firstName} {user.lastName}
-          </h2>
+          <h2 className="text-md text-[#989898]">{user.username}</h2>
           <TipoUsuario user={user.role} />
         </div>
       </div>

@@ -38,7 +38,7 @@ export const DatePickerInput = (props: any) => {
             "bg-gray-opacity-10 outline-none ring-offset-transparent ring-opacity-0 border-gray-opacity-10 ring-transparent":
               !isFill && !error,
           },
-          "placeholder-[#989898] font-[500] py-3 px-6 w-full border",
+          "placeholder-[#989898] font-[500] py-3 px-6 w-full border min-w-48",
           {
             "border-gray-500": !error && !isFill,
           },

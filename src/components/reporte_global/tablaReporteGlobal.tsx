@@ -30,6 +30,8 @@ export default function ReporteGlobalTabla({
     { hour: 23, mins: 59 },
   ]);
 
+  console.log(usuariosJerarquia);
+
   return (
     <div className="flex flex-col w-full gap-6 overflow-auto pb-4 min-h-[400px]">
       <div className={clsx("w-full flex flex-col py-4 px-6 gap-8")}>
@@ -156,7 +158,6 @@ export default function ReporteGlobalTabla({
                       netwin,
                       commission,
                     } = categoria;
-                    console.log(categoria);
                     return (
                       <tr
                         key={`user-${i}`}
@@ -213,20 +214,26 @@ export default function ReporteGlobalTabla({
                       </tr>
                     );
                   })}
+                  <tr className="bg-[#F4F4F4]">
+                    <>
+                      <td className="py-2 pr-4 pl-8 ">
+                        <p>Total a Pagar:</p>{" "}
+                      </td>
+                      <td className="py-2 px-4"></td>
+                      <td className="py-2 px-4"></td>
+                      <td className="py-2 px-4"></td>
+                      <td className="py-2 pl-4 pr-8"></td>
+                      <td className="py-2 pl-4 pr-8 text-center">
+                        {new Intl.NumberFormat().format(totalPagar)}
+                      </td>
+                    </>
+                  </tr>
                 </tbody>
               </table>
             </div>{" "}
-            <div className="flex justify-end w-full">
-              <div className="flex px-[72px] py-2 gap-16 rounded-b-xl bg-[#F4F4F4]">
-                <p>Total a Pagar:</p>{" "}
-                <span className="font-[600] text-[#5C5C5C]">
-                  {new Intl.NumberFormat().format(totalPagar)}
-                </span>
-              </div>
-            </div>
           </div>
           <Jerarquia
-            usuariosJerarquia={usuariosJerarquia}
+            usuariosJerarquia={usuariosJerarquia.children}
             setUserId={setUserId}
             userSelected={userId}
           />

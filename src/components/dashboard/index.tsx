@@ -63,7 +63,7 @@ export const DashboardData = () => {
       <ModalCrear isShow={isShowCrear}>
         <CrearUsuario hide={hideCrear} />
       </ModalCrear>
-      <div className="flex flex-col items-center justify-center xl:w-full w-96 p-4 gap-12 rounded-lg shadow-box relative pt-16 pb-8">
+      <div className="flex flex-col items-center justify-center xl:w-full sm:w-96 w-full p-4 gap-12 rounded-lg shadow-box relative pt-16 pb-8">
         <div className="top-[-20px] left-0 right-0 mx-auto absolute bg-green-200 text-green-600 py-3 px-6 w-fit rounded-xl font-[500]">
           Carga Rápida
         </div>
@@ -134,7 +134,7 @@ const GananciaNeta = () => {
   const router = useRouter();
   const [isShowed, setIsShowed] = React.useState(true);
   const [data, setData] = React.useState({ mesActual: 0, mesAnterior: 0 });
-  const { auth } = useContext(AuthContext);
+  const { auth, setAuth } = useContext(AuthContext);
 
   const getData = async () => {
     try {
@@ -154,13 +154,17 @@ const GananciaNeta = () => {
         ]);
         console.log(arrayData);
         const data = arrayData.map(({ data }: any) => {
-          return data.data.items[0].netwin;
+          return data?.data?.items[0]?.netwin || 0;
         });
         setData({ mesAnterior: data[0], mesActual: data[1] });
       } else {
         return router.push("/usuarios");
       }
-    } catch (err) {
+    } catch (err: any) {
+      if (err?.response?.status == 401) {
+        setAuth(null);
+        router.push("/auth/login");
+      }
       console.log(err);
     }
   };
@@ -172,7 +176,7 @@ const GananciaNeta = () => {
   }, [auth]);
 
   return (
-    <div className="flex flex-col items-center justify-center xl:w-full w-96 p-4 rounded-lg shadow-box relative py-16">
+    <div className="flex flex-col items-center justify-center xl:w-full sm:w-96 w-full p-4 rounded-lg shadow-box relative py-16">
       <div className="top-[-20px] left-0 right-0 mx-auto absolute bg-green-200 text-green-600 py-3 px-6 w-fit rounded-xl font-[500]">
         Ganancia Neta
       </div>
@@ -222,7 +226,7 @@ const GananciaNeta = () => {
 
 const NetwinMensual = () => {
   return (
-    <div className="flex items-center justify-center xl:w-full w-96 p-4 rounded-lg shadow-box relative xl:py-16 py-8 px-8">
+    <div className="flex items-center justify-center xl:w-full sm:w-96 w-full p-4 rounded-lg shadow-box relative xl:py-16 py-8 px-8">
       <div className="top-[-20px] left-0 right-0 mx-auto absolute bg-green-200 text-green-600 py-3 px-6 w-fit rounded-xl font-[500]">
         Netwin Mensual
       </div>
@@ -233,7 +237,7 @@ const NetwinMensual = () => {
 
 const NetwinDiario = () => {
   return (
-    <div className="flex items-center justify-center xl:w-full w-96 p-4 rounded-lg shadow-box relative xl:py-16  px-8">
+    <div className="flex items-center justify-center xl:w-full sm:w-96 w-full p-4 rounded-lg shadow-box relative xl:py-16  px-8">
       <div className="top-[-20px] left-0 right-0 mx-auto absolute bg-green-200 text-green-600 py-3 px-6 w-fit rounded-xl font-[500]">
         Netwin Diario
       </div>
@@ -248,47 +252,55 @@ const TopAgentes = () => {
   const router = useRouter();
 
   const getData = async () => {
-    if (auth?.user.role !== "admin") {
-      const { mesActual } = obtenerMesActualYAnterior();
-      const { data: users } = await axios.get(`/users?limit=1000000&offset=0`);
-      const totalNetwin = (
-        await axios.get(
-          `/netwin/${auth?.user.id}?from=${obtenerPrimeraFechaDelMes(
-            mesActual,
-          )}&to=${obtenerUltimaFechaDelMes(mesActual)}`,
-        )
-      )?.data?.data?.items[0]?.netwin;
-      const arrayData = await Promise.all(
-        users.data
-          .filter((user: any) => {
-            return user.role == "agent";
-          })
-          .map((a: any) => {
-            return axios.get(
-              `/netwin/${a.id}?from=${obtenerPrimeraFechaDelMes(
+    try {
+      if (auth?.user.role !== "admin") {
+        const { mesActual } = obtenerMesActualYAnterior();
+        const { data: users } = await axios.get(
+          `/users?limit=1000000&offset=0`,
+        );
+        const totalNetwin =
+          (
+            await axios.get(
+              `/netwin/${auth?.user.id}?from=${obtenerPrimeraFechaDelMes(
                 mesActual,
               )}&to=${obtenerUltimaFechaDelMes(mesActual)}`,
-            );
-          }),
-      );
-      // console.log(arrayData);
-      setData(
-        arrayData
-          .map(({ data }, i) => {
-            const percentage = (data.data.items[0].netwin * 100) / totalNetwin;
-            return {
-              netwin: data.data.items[0].netwin,
-              nombre: users?.data[i].completename,
-              percentage: percentage,
-            };
-          })
-          .sort((a, b) => b.percentage - a.percentage)
-          .filter(({ percentage }: any, i) => {
-            return i <= 5 && percentage > 0;
-          }),
-      );
-    } else {
-      router.push("/usuarios");
+            )
+          )?.data?.data?.items[0]?.netwin || 0;
+        const arrayData = await Promise.all(
+          users.data
+            .filter((user: any) => {
+              return user.role == "agent";
+            })
+            .map((a: any) => {
+              return axios.get(
+                `/netwin/${a.id}?from=${obtenerPrimeraFechaDelMes(
+                  mesActual,
+                )}&to=${obtenerUltimaFechaDelMes(mesActual)}`,
+              );
+            }),
+        );
+        // console.log(arrayData);
+        setData(
+          arrayData
+            .map(({ data }, i) => {
+              const percentage =
+                (data?.data?.items[0]?.netwin || 0 * 100) / totalNetwin;
+              return {
+                netwin: data?.data?.items[0]?.netwin || 0,
+                nombre: users?.data[i].completename,
+                percentage: percentage,
+              };
+            })
+            .sort((a, b) => b.percentage - a.percentage)
+            .filter(({ percentage }: any, i) => {
+              return i <= 5 && percentage > 0;
+            }),
+        );
+      } else {
+        router.push("/usuarios");
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -299,7 +311,7 @@ const TopAgentes = () => {
   }, [auth]);
 
   return (
-    <div className="flex items-center justify-center xl:w-full w-96 p-4 rounded-lg shadow-box relative">
+    <div className="flex items-center justify-center xl:w-full sm:w-96 w-full p-4 rounded-lg shadow-box relative">
       <div className="top-[-20px] left-0 right-0 mx-auto absolute bg-green-200 text-green-600 py-3 px-6 w-fit rounded-xl font-[500]">
         Top Agentes del Mes
       </div>

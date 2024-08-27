@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Input } from "@/components/common/form/input";
 import clsx from "clsx";
 import { useForm } from "react-hook-form";
@@ -7,6 +7,7 @@ import axios from "axios";
 import ReporteFichasPerfilTabla from "@/components/perfiles/pyramid/tablas/tablaReporteFichasPerfil";
 import { useRouter } from "next/navigation";
 import { ChevronLeftIcon } from "@heroicons/react/outline";
+import { AuthContext } from "@/context/useUser";
 
 export default function DetalleDistribuidor({ user }: any) {
   const [page, setPage] = React.useState(0);
@@ -18,6 +19,7 @@ export default function DetalleDistribuidor({ user }: any) {
   ]);
   const { register } = useForm();
   const router = useRouter();
+  const { setAuth } = useContext(AuthContext);
 
   React.useEffect(() => {
     axios
@@ -33,6 +35,10 @@ export default function DetalleDistribuidor({ user }: any) {
       })
       .catch((error) => {
         console.error(error);
+        if (error?.response?.status == 401) {
+          setAuth(null);
+          router.push("/auth/login");
+        }
       });
   }, [dates, page]);
 

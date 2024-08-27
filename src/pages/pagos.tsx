@@ -1,8 +1,9 @@
+"use client";
 import React from "react";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/layout";
 
-export default function Home() {
+export default function Pagos() {
   const router = useRouter();
 
   return (

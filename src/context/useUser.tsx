@@ -79,6 +79,7 @@ const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
               }
             })
           : authDataString;
+      console.log(authData);
       // Configure axios headers
       if (authData !== null) {
         configureAxiosHeaders(authData.token);

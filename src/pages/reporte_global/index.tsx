@@ -1,3 +1,4 @@
+"use client";
 import React, { useContext } from "react";
 import { useRouter } from "next/navigation";
 import Layout from "@/components/layout";
@@ -17,40 +18,43 @@ export default function ReporteGlobal() {
 
   const { auth } = useContext(AuthContext);
 
-  React.useEffect(() => {
+  const onUpdate = async () => {
     if (userId === "0") {
-      axios
-        .get(`/netwin/${auth?.user.id}?from=${dates[0]}&to=${dates[1]}`)
-        .then((response) => {
-          console.log(response, "users");
-          setCategorias(response.data.data.items);
-          setTotalPagar(response.data.data.totalCommission);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    } else {
-      axios
-        .get(`/netwin/${userId}?from=${dates[0]}&to=${dates[1]}`)
-        .then((response) => {
-          console.log(response, "users");
-          setCategorias(response.data.data.items);
-          setTotalPagar(response.data.data.totalCommission);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
-    axios
-      .get(`/users/me/hierarchy`)
-      .then((response) => {
-        console.log(response, "hierarchy");
-        setHierarchy(response.data.data.children);
-      })
-      .catch((error) => {
+      try {
+        const [netwin, hierarchy] = await Promise.all([
+          axios.get(`/netwin/${auth?.user.id}?from=${dates[0]}&to=${dates[1]}`),
+          axios.get(`/users/me/hierarchy`),
+        ]);
+        console.log(hierarchy.data.data);
+
+        setCategorias(netwin.data.data.items);
+        setTotalPagar(netwin.data.data.totalCommission);
+        setHierarchy(hierarchy.data.data);
+      } catch (error) {
         console.error(error);
-      });
-  }, [dates, userId]);
+      }
+    } else {
+      try {
+        const [netwin, hierarchy] = await Promise.all([
+          axios.get(`/netwin/${userId}?from=${dates[0]}&to=${dates[1]}`),
+          axios.get(`/users/me/hierarchy`),
+        ]);
+        console.log(hierarchy.data.data);
+
+        setCategorias(netwin.data.data.items);
+        setTotalPagar(netwin.data.data.totalCommission);
+        setHierarchy(hierarchy.data.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+  React.useEffect(() => {
+    onUpdate();
+  }, [dates, userId, auth]);
+
+  console.log(hierarchy, "hierarchy updated");
 
   return (
     <div className="flex flex-col shrink-0 w-full px-10 py-4 gap-6">

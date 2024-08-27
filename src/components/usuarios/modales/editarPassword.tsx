@@ -30,7 +30,9 @@ export default function EditarPassword({ id, hide, onUpdate }: any) {
         .catch((error) => {
           console.log(error);
           if (
-            error.response.data.message.includes("Wrong credentials provided")
+            error?.response?.data?.message?.includes(
+              "Wrong credentials provided",
+            )
           ) {
             toast.error("Credenciales inválidas, revise e intente nuevamente.");
           } else {

@@ -36,7 +36,7 @@ export const Ingreso = ({ user, hide, register, me, edit }: any) => {
   return (
     <>
       <div className="flex flex-col gap-10 items-center py-8 lg:px-16 px-8 w-full">
-        <div className="flex gap-4 w-full">
+        <div className="flex lg:flex-row flex-col items-center justify-center gap-4 w-full">
           <div className="flex flex-col gap-2 w-1/2">
             <h2 className="text-sm font-[500] text-[#B3B3B3]">Username</h2>
             <Input
@@ -59,7 +59,7 @@ export const Ingreso = ({ user, hide, register, me, edit }: any) => {
             ></Input>
           </div>
         </div>
-        <div className="flex gap-4 w-full">
+        <div className="flex lg:flex-row flex-col items-center justify-center gap-4 w-full">
           {!edit && (
             <div className="flex flex-col gap-2 w-1/2">
               <h2 className="text-sm font-[500] text-[#B3B3B3]">Contraseña</h2>
@@ -247,7 +247,13 @@ export const Permisos = ({ hide, categories, register }: any) => {
   );
 };
 
-export const Comisiones = ({ hide, categories, register, setValue }: any) => {
+export const Comisiones = ({
+  hide,
+  categories,
+  register,
+  setValue,
+  loading,
+}: any) => {
   return (
     <>
       <div className="flex flex-col gap-10 items-center py-8 lg:px-16 px-8 w-full max-h-[70vh]">
@@ -333,7 +339,7 @@ export const Comisiones = ({ hide, categories, register, setValue }: any) => {
           Cancelar
         </Button>
         <Button type="submit" size="small" className="font-[550] w-2/5">
-          Crear
+          {loading ? "Creando..." : "Crear"}
         </Button>
       </div>
     </>

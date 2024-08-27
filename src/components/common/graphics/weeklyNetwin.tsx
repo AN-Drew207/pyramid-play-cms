@@ -75,24 +75,28 @@ export function DailyNetwin() {
   });
 
   const getData = async () => {
-    if (auth?.user.role !== "admin") {
-      const arrayData = await Promise.all(
-        obtenerSemanaEnCurso().map(({ from, to }, i) => {
-          return axios.get(`/netwin/${auth?.user.id}?from=${from}&to=${to}`);
-        }),
-      );
-      setData({
-        labels,
-        datasets: [
-          {
-            data: arrayData.map(({ data }) => {
-              return data.data.items[0].netwin;
-            }),
-            borderColor: "rgb(53, 162, 235)",
-            backgroundColor: "rgba(53, 162, 235, 0.5)",
-          },
-        ],
-      });
+    try {
+      if (auth?.user.role !== "admin") {
+        const arrayData = await Promise.all(
+          obtenerSemanaEnCurso().map(({ from, to }, i) => {
+            return axios.get(`/netwin/${auth?.user.id}?from=${from}&to=${to}`);
+          }),
+        );
+        setData({
+          labels,
+          datasets: [
+            {
+              data: arrayData.map(({ data }) => {
+                return data?.data?.items[0]?.netwin || 0;
+              }),
+              borderColor: "rgb(53, 162, 235)",
+              backgroundColor: "rgba(53, 162, 235, 0.5)",
+            },
+          ],
+        });
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 

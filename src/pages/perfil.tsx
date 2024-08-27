@@ -1,3 +1,4 @@
+"use client";
 import PerfilPyramid from "@/components/perfiles/pyramid";
 import React from "react";
 

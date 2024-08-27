@@ -56,9 +56,9 @@ export default function UsuariosTabla({
   ];
 
   const maxPage = new Array(
-    Math.floor(length / 10) < length / 10
-      ? Math.floor(length / 10) + 1
-      : Math.floor(length / 10),
+    Math.floor(length / 20) < length / 20
+      ? Math.floor(length / 20) + 1
+      : Math.floor(length / 20),
   );
 
   return (
@@ -70,7 +70,7 @@ export default function UsuariosTabla({
               name="tx"
               required
               labelVisible={false}
-              placeholder={"Busqueda Rápida"}
+              placeholder={"Busqueda"}
               register={register}
               value={txSearch}
               classNameContainer="xl:!w-auto !w-36 px-6 rounded-md !py-3"
@@ -124,13 +124,13 @@ export default function UsuariosTabla({
                       : role.value == user.role;
                   })
                   .map((user: any, i: any) => {
-                    const { completename, balance, role } = user;
+                    const { completename, username, balance, role } = user;
                     return (
                       <tr key={`user-${i}`}>
                         <>
                           <td className="py-4 pr-4 pl-8">
                             <h2 className="text-[#5C5C5C] xl:text-md flex items-center gap-2">
-                              {completename} <TipoUsuario user={role} />
+                              {username} <TipoUsuario user={role} />
                             </h2>
                           </td>
                           <td className="py-4 px-4">
@@ -161,7 +161,7 @@ export default function UsuariosTabla({
           />
         </div>
       </div>
-      {length > 10 && txSearch.length === 0 ? (
+      {length > 20 && txSearch.length === 0 ? (
         <div className="flex w-full gap-4 items-center justify-center xl:text-lg text-sm text-primary">
           <ArrowLeftIcon
             className="w-6"

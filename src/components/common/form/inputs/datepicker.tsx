@@ -49,7 +49,7 @@ export const DatePickerInput = (props: any) => {
           {
             "border-gray-500": !error && !isFill,
           },
-          "disabled:placeholder-gray-600 disabled:cursor-not-allowed disabled:text-gray-500",
+          "disabled:placeholder-gray-600 disabled:cursor-not-allowed disabled:text-gray-500 min-w-48",
           "bg-[#F4F4F4] text-[#989898] border border-white rounded-lg p-2 roboto",
           {
             "focus:outline-none focus:bg-gray-opacity-10 focus:ring-offset-transparent focus:ring-opacity-0 focus:border-white focus:ring-transparent":
