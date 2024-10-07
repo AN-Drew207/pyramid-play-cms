@@ -135,7 +135,7 @@ export default function UsuariosTabla({
                           </td>
                           <td className="py-4 px-4">
                             <h2 className="text-[#5C5C5C] xl:text-lg text-sm">
-                              {balance}
+                              {parseFloat(balance).toFixed(2)}
                             </h2>
                           </td>
                           <td className="py-4 px-4">
